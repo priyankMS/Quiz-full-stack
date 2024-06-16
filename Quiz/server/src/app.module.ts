@@ -1,3 +1,4 @@
+
 import { Module } from '@nestjs/common';
 
 
@@ -10,11 +11,24 @@ import { UserService } from './user/user.service';
 import { User, UserSchema } from './user/user.schema';
 import { QuestionModule } from './question/question.module';
 import { UserModule } from './user/user.module';
+import { ConfigModule } from '@nestjs/config';
 
 
 
 @Module({
-  imports: [MongooseModule.forRoot('mongodb+srv://webmetrix12:nIy4ZMLDanMor96e@cluster0.mio0vzx.mongodb.net/nest-mcq'),
+  imports: [
+    
+     ConfigModule.forRoot({
+      isGlobal:true,
+     }) ,
+     MongooseModule.forRootAsync({
+      useFactory:async()=>(
+        {
+          uri:process.env.MONGO_URI,
+        }
+      )
+     }),
+   
     MongooseModule.forFeature([
       {name:Question.name,schema:QuestionSchema},
       {name:User.name,schema:UserSchema}
